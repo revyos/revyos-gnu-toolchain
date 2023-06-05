@@ -1,14 +1,15 @@
 [submodule "binutils"]
 	path = binutils
-	url = https://sourceware.org/git/binutils-gdb.git
-	branch = binutils-2_40-branch
+	url = https://github.com/revyos/binutils-gdb.git
+	branch = revyos-2.40
 [submodule "gcc"]
 	path = gcc
-	url = https://gcc.gnu.org/git/gcc.git
-	branch = releases/gcc-12
+	url = https://github.com/revyos/gcc.git
+	branch = revyos-gcc10.4-thead-dev
 [submodule "glibc"]
 	path = glibc
-	url = https://sourceware.org/git/glibc.git
+	url = https://github.com/revyos/glibc.git
+        branch = revyos-2.36
 [submodule "dejagnu"]
 	path = dejagnu
 	url = https://git.savannah.gnu.org/git/dejagnu.git

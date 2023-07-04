@@ -68,7 +68,7 @@ AC_ARG_WITH(tune,
 	[AS_HELP_STRING([--with-tune=rocket],
 		[Set the base RISC-V CPU, defaults to rocket])],
 	[],
-	[with_tune=rocket]
+	[with_tune=default]
 	)
 
 AC_ARG_WITH(isa-spec,
@@ -99,7 +99,11 @@ AS_IF([test "x$with_abi" = xdefault],
 
 AC_SUBST(WITH_ARCH, --with-arch=$with_arch)
 AC_SUBST(WITH_ABI, --with-abi=$with_abi)
-AC_SUBST(WITH_TUNE, --with-tune=$with_tune)
+AC_SUBST(WITH_TUNE,)
+AS_IF([test "x$with_tune" != xdefault],
+	[AC_SUBST(WITH_TUNE, --with-tune=$with_tune)],
+	[AC_SUBST(WITH_TUNE, "")])
+
 AC_SUBST(WITH_ISA_SPEC, --with-isa-spec=$with_isa_spec)
 AC_SUBST(WITH_SIM, $with_sim)
 
@@ -187,6 +191,17 @@ AC_ARG_WITH(host,
 AS_IF([test "x$with_host" != xdefault],
 	[AC_SUBST(configure_host,--host=$with_host)],
 	[AC_SUBST(configure_host,"")])
+
+AC_ARG_WITH(pkgversion,
+	[AC_HELP_STRING([--with-pkgversion],
+			[Set toolchain package version])],
+	[],
+	[with_pkgversion=default]
+	)
+
+AS_IF([test "x$with_pkgversion" != xdefault],
+	[AC_SUBST(configure_pkgversion,--with-pkgversion=\"$with_pkgversion\")],
+	[AC_SUBST(configure_pkgversion,"")])
 
 AC_ARG_WITH(system-zlib,
 	[AS_HELP_STRING([--without-system-zlib],

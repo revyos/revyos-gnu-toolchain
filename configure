@@ -587,8 +587,8 @@ LIBOBJS
 qemu_targets
 enable_libsanitizer
 with_linux_headers_src
-with_pk_src
 with_dejagnu_src
+with_pk_src
 with_spike_src
 with_qemu_src
 with_gdb_src
@@ -600,6 +600,7 @@ with_gcc_src
 enable_gdb
 with_guile
 with_system_zlib
+configure_pkgversion
 configure_host
 target_cxxflags
 target_cflags
@@ -652,7 +653,6 @@ infodir
 docdir
 oldincludedir
 includedir
-runstatedir
 localstatedir
 sharedstatedir
 sysconfdir
@@ -688,6 +688,7 @@ with_cmodel
 with_target_cflags
 with_target_cxxflags
 with_host
+with_pkgversion
 with_system_zlib
 with_guile
 enable_gdb
@@ -751,7 +752,6 @@ datadir='${datarootdir}'
 sysconfdir='${prefix}/etc'
 sharedstatedir='${prefix}/com'
 localstatedir='${prefix}/var'
-runstatedir='${localstatedir}/run'
 includedir='${prefix}/include'
 oldincludedir='/usr/include'
 docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
@@ -1004,15 +1004,6 @@ do
   | -silent | --silent | --silen | --sile | --sil)
     silent=yes ;;
 
-  -runstatedir | --runstatedir | --runstatedi | --runstated \
-  | --runstate | --runstat | --runsta | --runst | --runs \
-  | --run | --ru | --r)
-    ac_prev=runstatedir ;;
-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
-  | --run=* | --ru=* | --r=*)
-    runstatedir=$ac_optarg ;;
-
   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
     ac_prev=sbindir ;;
   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
@@ -1150,7 +1141,7 @@ fi
 for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
 		datadir sysconfdir sharedstatedir localstatedir includedir \
 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
-		libdir localedir mandir runstatedir
+		libdir localedir mandir
 do
   eval ac_val=\$$ac_var
   # Remove trailing slashes.
@@ -1303,7 +1294,6 @@ Fine tuning of the installation directories:
   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
   --libdir=DIR            object code libraries [EPREFIX/lib]
   --includedir=DIR        C header files [PREFIX/include]
   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
@@ -1364,6 +1354,7 @@ Optional Packages:
   --with-host=x86_64-w64-mingw32
                           Sets the host for the tools, you probably want
                           nothing
+  --with-pkgversion       Set toolchain package version
   --without-system-zlib   use the builtin copy of zlib from GCC
   --with-guile            Set which guile to use, if any
   --with-gcc-src          Set gcc source path, use builtin source by default
@@ -1377,6 +1368,8 @@ Optional Packages:
   --with-qemu-src         Set qemu source path, use builtin source by default
   --with-spike-src        Set spike source path, use builtin source by default
   --with-pk-src           Set pk source path, use builtin source by default
+  --with-dejagnu-src      Set dejagnu source path, use builtin source by
+                          default
   --with-linux-headers-src
                           Set linux-headers source path, use builtin source by
                           default
@@ -3318,7 +3311,7 @@ fi
 if test "${with_tune+set}" = set; then :
   withval=$with_tune;
 else
-  with_tune=rocket
+  with_tune=default
 
 fi
 
@@ -3369,7 +3362,14 @@ WITH_ARCH=--with-arch=$with_arch
 
 WITH_ABI=--with-abi=$with_abi
 
-WITH_TUNE=--with-tune=$with_tune
+
+if test "x$with_tune" != xdefault; then :
+  WITH_TUNE=--with-tune=$with_tune
+
+else
+  WITH_TUNE=""
+
+fi
 
 WITH_ISA_SPEC=--with-isa-spec=$with_isa_spec
 
@@ -3502,6 +3502,24 @@ if test "x$with_host" != xdefault; then :
 
 else
   configure_host=""
+
+fi
+
+
+# Check whether --with-pkgversion was given.
+if test "${with_pkgversion+set}" = set; then :
+  withval=$with_pkgversion;
+else
+  with_pkgversion=default
+
+fi
+
+
+if test "x$with_pkgversion" != xdefault; then :
+  configure_pkgversion=--with-pkgversion=\"$with_pkgversion\"
+
+else
+  configure_pkgversion=""
 
 fi
 
@@ -3731,7 +3749,6 @@ else
 fi
 
 	}
-
 {
 
 # Check whether --with-dejagnu-src was given.

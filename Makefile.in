@@ -101,6 +101,7 @@ MUSL_CC_FOR_TARGET ?= $(MUSL_TUPLE)-gcc
 MUSL_CXX_FOR_TARGET ?= $(MUSL_TUPLE)-g++
 
 CONFIGURE_HOST   = @configure_host@
+CONFIGURE_PKGVERSION = @configure_pkgversion@
 
 all: @default_target@
 newlib: stamps/build-gcc-newlib-stage2
@@ -325,6 +326,7 @@ stamps/build-gdb-linux: $(GDB_SRCDIR) $(GDB_SRC_GIT)
 	cd $(notdir $@) && CC_FOR_TARGET=$(GLIBC_CC_FOR_TARGET) $</configure \
 		--target=$(LINUX_TUPLE) \
 		$(CONFIGURE_HOST) \
+		$(CONFIGURE_PKGVERSION) \
 		--prefix=$(INSTALL_DIR) \
 		--with-sysroot=$(SYSROOT) \
 		$(MULTILIB_FLAGS) \
@@ -437,9 +439,9 @@ stamps/build-gcc-linux-stage2: $(GCC_SRCDIR) $(GCC_SRC_GIT) $(addprefix stamps/b
 	cd $(notdir $@) && $</configure \
 		--target=$(LINUX_TUPLE) \
 		$(CONFIGURE_HOST) \
+		$(CONFIGURE_PKGVERSION) \
 		--prefix=$(INSTALL_DIR) \
 		--with-sysroot=$(SYSROOT) \
-		--with-pkgversion="$(GCCPKGVER)" \
 		@with_system_zlib@ \
 		--enable-shared \
 		--enable-tls \
@@ -495,6 +497,7 @@ stamps/build-gcc-linux-native: $(GCC_SRCDIR) $(GCC_SRC_GIT) stamps/build-gcc-lin
 		--host=$(LINUX_TUPLE) \
 		--target=$(LINUX_TUPLE) \
 		$(CONFIGURE_HOST) \
+		$(CONFIGURE_PKGVERSION) \
 		--prefix=$(INSTALL_DIR)/native \
 		--without-system-zlib \
 		--enable-shared \
@@ -549,6 +552,7 @@ stamps/build-gdb-newlib: $(GDB_SRCDIR) $(GDB_SRC_GIT)
 	cd $(notdir $@) && CC_FOR_TARGET=$(NEWLIB_CC_FOR_TARGET) $</configure \
 		--target=$(NEWLIB_TUPLE) \
 		$(CONFIGURE_HOST) \
+		$(CONFIGURE_PKGVERSION) \
 		--prefix=$(INSTALL_DIR) \
 		@with_guile@ \
 		--disable-werror \
@@ -674,11 +678,11 @@ stamps/build-gcc-newlib-stage2: $(GCC_SRCDIR) $(GCC_SRC_GIT) stamps/build-newlib
 	cd $(notdir $@) && $</configure \
 		--target=$(NEWLIB_TUPLE) \
 		$(CONFIGURE_HOST) \
+		$(CONFIGURE_PKGVERSION) \
 		--prefix=$(INSTALL_DIR) \
 		--disable-shared \
 		--disable-threads \
 		--enable-languages=c,c++ \
-		--with-pkgversion="$(GCCPKGVER)" \
 		@with_system_zlib@ \
 		--enable-tls \
 		--with-newlib \
@@ -810,6 +814,7 @@ stamps/build-gcc-musl-stage2: $(GCC_SRCDIR) $(GCC_SRC_GIT) stamps/build-musl-lin
 	cd $(notdir $@) && $</configure \
 		--target=$(MUSL_TUPLE) \
 		$(CONFIGURE_HOST) \
+		$(CONFIGURE_PKGVERSION) \
 		--prefix=$(INSTALL_DIR) \
 		--with-sysroot=$(SYSROOT) \
 		@with_system_zlib@ \

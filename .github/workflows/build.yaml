@@ -15,10 +15,10 @@ jobs:
     strategy:
       matrix:
         os:     [ubuntu-20.04, ubuntu-22.04]
-        mode:   [newlib, linux]
-        target: [rv64gc-lp64d]
+        mode:   [linux]
+        target: [rv64gc-lp64d, rv64gcv0p7_zfh_xtheadc-lp64d, rv64gcv_zfh_xtheadc-lp64d]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: initialize submodules
         run: |
@@ -49,7 +49,8 @@ jobs:
             *)
               MODE="elf";;
           esac
-          echo ::set-output name=TOOLCHAIN_NAME::riscv$BITS-$MODE-${{ matrix.os }}-nightly
+          TARGET_TUPLE=($(echo ${{ matrix.target }} | tr "-" "\n"))
+          echo ::set-output name=TOOLCHAIN_NAME::riscv$BITS-${TARGET_TUPLE[0]}-$MODE-${{ matrix.os }}-nightly
 
       - uses: actions/upload-artifact@v2
         with:

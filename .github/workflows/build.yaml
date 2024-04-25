@@ -18,6 +18,15 @@ jobs:
         mode:   [linux]
         target: [rv64gc-lp64d, rv64gcv0p7_zfh_xtheadc-lp64d, rv64gcv_zfh_xtheadc-lp64d]
     steps:
+      - name: Remove unneeded frameworks to recover disk space
+        run: |
+          echo "-- Before --"
+          df -h
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          echo "-- After --"
+          df -h
+
       - uses: actions/checkout@v4
 
       - name: install dependencies
@@ -57,3 +66,4 @@ jobs:
         with:
           name: ${{ steps.toolchain-name-generator.outputs.TOOLCHAIN_NAME }}
           path: riscv.tar.gz
+
